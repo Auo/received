@@ -1,0 +1,7 @@
+## Interface: 80100
+## Title: Received
+## Author: Shinri, Vashj EU
+## Notes: See how many items you collect in a timespan
+## Version: 0.0.1
+
+Received.lua
