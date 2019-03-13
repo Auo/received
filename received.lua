@@ -1,6 +1,3 @@
-local frame = CreateFrame("frame");
-local CHAT_MSG_LOOT = "CHAT_MSG_LOOT";
-
 local storage = nil;
 local time = nil;
 
@@ -58,7 +55,10 @@ function SlashCmdList.SENDER(msg, editbox)
    end
 end
 
-local function OnEvent(self, event, arg1, ...)
+local frame = CreateFrame("frame");
+local CHAT_MSG_LOOT = "CHAT_MSG_LOOT";
+
+local function OnEvent(self, event, arg1, arg5, ...)
    if event ~= CHAT_MSG_LOOT then
       return;
    end
@@ -66,7 +66,12 @@ local function OnEvent(self, event, arg1, ...)
    if storage == nil then
       return;
    end
-   --print(arg1);
+   
+   local player = GetUnitName("player") .. "-" .. GetRealmName();
+   
+   if arg5 ~= player then
+      return;
+   end
    
    local key = getItem(arg1);
    local count = getCount(arg1);
@@ -78,6 +83,7 @@ local function OnEvent(self, event, arg1, ...)
    
    storage[key] = total;
 end
+
 
 frame:SetScript("OnEvent", OnEvent);
 frame:RegisterEvent(CHAT_MSG_LOOT);
