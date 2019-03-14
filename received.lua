@@ -2,7 +2,7 @@ local storage = nil;
 local time = nil;
 
 local function getItem(str)
-   return string.match(str, "\%[([^\%]]+)");
+   return string.match(str, ": (.*%\|r)x");
 end
 
 local function getCount(str)
@@ -33,13 +33,34 @@ local function start()
    storage = {};
 end
 
-local function stop() 
-   for key,value in pairs(storage) do 
-      print(key, value)
+local function prettyTime(seconds)   
+   local minutes = math.floor(seconds / 60);
+   local remaningSeconds = math.floor(seconds) - (minutes * 60);
+   
+   local message = "";
+   
+   if minutes > 0 then
+      message = minutes .. " minutes";
    end
    
+   if remaningSeconds > 0 then
+      message = message .. " " .. remaningSeconds .. " seconds";
+   end
+
+   return message;
+end
+
+local function printInfo() 
    local seconds = GetTime() - time;
-   print(seconds);
+   
+   for key,value in pairs(storage) do 
+      print(key .. "x" .. value)
+   end
+
+   print(prettyTime(seconds));
+end
+
+local function stop() 
    time = nil;
    storage = nil;
 end
@@ -51,11 +72,15 @@ function SlashCmdList.SENDER(msg, editbox)
       start();
    elseif msg == "stop" then
       print("stop");
+      printInfo();
       stop();
+   elseif msg == "status" then
+      printInfo();
    end
 end
 
 local frame = CreateFrame("frame");
+
 local CHAT_MSG_LOOT = "CHAT_MSG_LOOT";
 
 local function OnEvent(self, event, arg1, arg5, ...)
@@ -75,12 +100,7 @@ local function OnEvent(self, event, arg1, arg5, ...)
    
    local key = getItem(arg1);
    local count = getCount(arg1);
-   --print("key: " .. key);
-   --print("count: " .. count);
-   
    local total = getOrDefault(storage, key, 0) + count;
-   --print("total: " .. total);
-   
    storage[key] = total;
 end
 
