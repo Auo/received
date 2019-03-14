@@ -65,16 +65,17 @@ local function stop()
    storage = nil;
 end
 
-SLASH_SENDER1 = '/receive'
+SLASH_SENDER1 = '/received'
 function SlashCmdList.SENDER(msg, editbox) 
    if msg == "start" then
-      print("start");
+      print("Data collection started: happy farming.");
       start();
    elseif msg == "stop" then
-      print("stop");
+      print("Data collection stopped.");
       printInfo();
       stop();
    elseif msg == "status" then
+      print("Your collected items so far.")
       printInfo();
    end
 end
