@@ -65,8 +65,8 @@ local function stop()
    storage = nil;
 end
 
-SLASH_SENDER1 = '/received'
-function SlashCmdList.SENDER(msg, editbox) 
+SLASH_RECEIVED1 = '/received'
+function SlashCmdList.RECEIVED(msg, editbox) 
    if msg == "start" then
       print("Data collection started: happy farming.");
       start();
