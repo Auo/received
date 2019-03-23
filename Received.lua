@@ -1,27 +1,11 @@
+received = {};
+
+local frame = CreateFrame("Frame");
 local storage = nil;
 local time = nil;
-
-local function getItem(str)
-   return string.match(str, ": (.*%\|r)x");
-end
-
-local function getCount(str)
-   local val = string.match(str, "x(.*)\%.");
-   if val then
-      return val;
-   else
-      return 1;
-   end
-end
-
-local function getOrDefault(table, key, defaultValue)
-   local val = table[key];
-   if val then
-      return val;
-   else
-      return defaultValue;
-   end
-end
+local CHAT_MSG_LOOT = "CHAT_MSG_LOOT";
+local PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
+local ui = nil; 
 
 local function start() 
    if storage ~= nil then
@@ -33,59 +17,35 @@ local function start()
    storage = {};
 end
 
-local function prettyTime(seconds)   
-   local minutes = math.floor(seconds / 60);
-   local remaningSeconds = math.floor(seconds) - (minutes * 60);
-   
-   local message = "";
-   
-   if minutes > 0 then
-      message = minutes .. " minutes";
-   end
-   
-   if remaningSeconds > 0 then
-      message = message .. " " .. remaningSeconds .. " seconds";
-   end
-
-   return message;
-end
-
-local function printInfo() 
-   local seconds = GetTime() - time;
-   
-   for key,value in pairs(storage) do 
-      print(key .. "x" .. value)
-   end
-
-   print(prettyTime(seconds));
-end
-
 local function stop() 
    time = nil;
    storage = nil;
 end
 
 SLASH_RECEIVED1 = '/received'
-function SlashCmdList.RECEIVED(msg, editbox) 
-   if msg == "start" then
-      print("Data collection started: happy farming.");
-      start();
-   elseif msg == "stop" then
-      print("Data collection stopped.");
-      printInfo();
-      stop();
-   elseif msg == "status" then
-      print("Your collected items so far.")
-      printInfo();
-   end
+SlashCmdList["RECEIVED"] = function(message)
+   print('slash');
+   ui:Show();
 end
 
-local frame = CreateFrame("frame");
-
-local CHAT_MSG_LOOT = "CHAT_MSG_LOOT";
-
 local function OnEvent(self, event, arg1, arg5, ...)
-   if event ~= CHAT_MSG_LOOT then
+   if event == PLAYER_ENTERING_WORLD then
+      print(received.ui);
+      ui = received.ui.createUI();
+
+      ui.start:SetScript("OnClick", function()
+         print("start");
+         start();
+      end);
+      
+      ui.stop:SetScript("OnClick", function()
+         print("stop");
+         ui.result.editBox:SetText(received.helper.prettyResult(time, storage));
+         stop();
+      end);
+
+      frame:UnRegisterEvent(PLAYER_ENTERING_WORLD);
+   elseif event ~= CHAT_MSG_LOOT then
       return;
    end
    
@@ -93,18 +53,20 @@ local function OnEvent(self, event, arg1, arg5, ...)
       return;
    end
    
+   -- store this value, and reuse
    local player = GetUnitName("player") .. "-" .. GetRealmName();
    
    if arg5 ~= player then
       return;
    end
    
-   local key = getItem(arg1);
-   local count = getCount(arg1);
-   local total = getOrDefault(storage, key, 0) + count;
+   local key = received.helper.getItem(arg1);
+   local count = received.helper.getCount(arg1);
+   local total = received.helper.getOrDefault(storage, key, 0) + count;
+
    storage[key] = total;
 end
 
-
 frame:SetScript("OnEvent", OnEvent);
 frame:RegisterEvent(CHAT_MSG_LOOT);
+frame:RegisterEvent(PLAYER_ENTERING_WORLD);
