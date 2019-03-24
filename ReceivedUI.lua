@@ -2,7 +2,7 @@ received.ui = {};
 
 received.ui.createUI = function()
    local container = CreateFrame("Frame", "ReceiveUIContainer", UIParent);
-   container:SetSize(400, 210);
+   container:SetSize(200, 210);
    container:SetBackdrop({
          bgFile = "Interface/FrameGeneral/UI-Background-Rock",
          edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
@@ -42,7 +42,7 @@ received.ui.createUI = function()
    -- result
    container.result = CreateFrame("Frame", "ReceiveUIEditBox", container);
    container.result:SetPoint("TOP", 0, -30);
-   container.result:SetSize(400, 180);
+   container.result:SetSize(container:GetWidth(), 180);
    
    container.result:SetBackdrop({
          bgFile = "Interface/DialogFrame/UI-DialogBox-Background",

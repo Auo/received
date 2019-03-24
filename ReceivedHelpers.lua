@@ -23,20 +23,23 @@ received.helper.getItem = function(str)
  end
 
  received.helper.prettyTime = function(seconds)   
-    local minutes = math.floor(seconds / 60);
-    local remaningSeconds = math.floor(seconds) - (minutes * 60);
-    
-    local message = "";
-    
-    if minutes > 0 then
-       message = minutes .. " minutes";
-    end
-    
-    if remaningSeconds > 0 then
-       message = message .. " " .. remaningSeconds .. " seconds";
-    end
- 
-    return message;
+   local minutes = math.floor(seconds / 60);
+   local remaningSeconds = math.floor(seconds) - (minutes * 60);
+   
+   local message = "";
+   
+   if minutes > 0 then
+      message = minutes .. " minute";
+      if minutes > 1 then
+         message = message .. "s";
+      end
+   end
+   
+   if remaningSeconds > 0 then
+      message = message .. " " .. remaningSeconds .. " seconds";
+   end
+   
+   return message;
  end
 
  received.helper.prettyResult = function(startTime, storage) 

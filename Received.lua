@@ -24,13 +24,11 @@ end
 
 SLASH_RECEIVED1 = '/received'
 SlashCmdList["RECEIVED"] = function(message)
-   print('slash');
    ui:Show();
 end
 
 local function OnEvent(self, event, arg1, arg5, ...)
    if event == PLAYER_ENTERING_WORLD then
-      print(received.ui);
       ui = received.ui.createUI();
 
       ui.start:SetScript("OnClick", function()
