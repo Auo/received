@@ -2,7 +2,7 @@
 ## Title: Received
 ## Author: Shinri, Vashj EU
 ## Notes: See how many items you collect in a timespan
-## Version: 0.0.1
+## Version: 1.0.0
 
 Received.lua
 ReceivedHelpers.lua
